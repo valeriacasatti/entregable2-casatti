@@ -1,0 +1,11 @@
+[
+	{
+		"title": "Hoodie Galaxy",
+		"description": "Black oversize hoodie",
+		"price": 17000,
+		"thumbnail": "https://res.cloudinary.com/dqrgdohtt/image/upload/v1687800305/hoodieGalaxy_mfam50.jpg",
+		"code": "PROD1",
+		"stock": 3,
+		"id": 1
+	}
+]
