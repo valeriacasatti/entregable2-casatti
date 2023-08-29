@@ -34,7 +34,7 @@ class ProductManager {
           product.code === productInfo.code;
         });
         if (codeExist) {
-          console.log(`el codigo ${productInfo.code} ya existe!`);
+          console.log(`code ${productInfo.code} already exists!`);
         } else {
           //id autoincrementable
           const id = contenidoJson.reduce((maxId, product) => {
@@ -48,7 +48,7 @@ class ProductManager {
             this.path,
             JSON.stringify(contenidoJson, null, "\t")
           );
-          console.log(`${productInfo.title} agregado exitosamente`);
+          console.log(`${productInfo.title} added successfully`);
         }
       }
     } catch (error) {
@@ -78,7 +78,7 @@ class ProductManager {
   }
 
   //modificar productos
-  async updateProduct(id, updatedProduct) {
+  async updateProduct(id, updatedContent) {
     try {
       if (this.fileExist()) {
         const contenido = await fs.promises.readFile(this.path, "utf-8");
@@ -91,7 +91,7 @@ class ProductManager {
         if (productIndex !== -1) {
           contenidoJson[productIndex] = {
             ...contenidoJson[productIndex],
-            ...updatedProduct,
+            ...updatedContent,
           };
 
           //actualiza
@@ -99,9 +99,9 @@ class ProductManager {
             this.path,
             JSON.stringify(contenidoJson, null, "\t")
           );
-          console.log("producto actualizado correctamente");
+          console.log("product updated successfully");
         } else {
-          console.log("no se encontro el ID");
+          console.log("can't update product, id not found");
         }
       }
     } catch (error) {
@@ -123,7 +123,7 @@ class ProductManager {
           this.path,
           JSON.stringify(newArray, null, "\t")
         );
-        console.log("producto eliminado correctamente");
+        console.log("product successfully removed");
       }
     } catch (error) {
       console.error("delete products error: ", error);
