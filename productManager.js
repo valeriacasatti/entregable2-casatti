@@ -29,26 +29,43 @@ class ProductManager {
         const contenido = await fs.promises.readFile(this.path, "utf-8");
         const contenidoJson = JSON.parse(contenido);
 
-        //validar unico code
-        const codeExist = contenidoJson.some((product) => {
-          product.code === productInfo.code;
-        });
-        if (codeExist) {
-          console.log(`code ${productInfo.code} already exists!`);
+        //validar que todos los campos sean obligatorios
+        const requiredFields = [
+          "title",
+          "description",
+          "price",
+          "thumbnail",
+          "code",
+          "stock",
+        ];
+        const missingFields = requiredFields.filter(
+          (field) => !productInfo.hasOwnProperty(field)
+        );
+        if (missingFields.length > 0) {
+          console.error(`${missingFields.join(",")} is a required field`);
+          return;
         } else {
-          //id autoincrementable
-          const id = contenidoJson.reduce((maxId, product) => {
-            return product.id > maxId ? product.id : maxId;
-          }, 0);
-          const newId = id + 1;
-          productInfo.id = newId;
-          //agregar producto
-          contenidoJson.push(productInfo);
-          await fs.promises.writeFile(
-            this.path,
-            JSON.stringify(contenidoJson, null, "\t")
-          );
-          console.log(`${productInfo.title} added successfully`);
+          //validar unico code
+          const codeExist = contenidoJson.some((product) => {
+            product.code === productInfo.code;
+          });
+          if (codeExist) {
+            console.log(`code ${productInfo.code} already exists!`);
+          } else {
+            //id autoincrementable
+            const id = contenidoJson.reduce((maxId, product) => {
+              return product.id > maxId ? product.id : maxId;
+            }, 0);
+            const newId = id + 1;
+            productInfo.id = newId;
+            //agregar producto
+            contenidoJson.push(productInfo);
+            await fs.promises.writeFile(
+              this.path,
+              JSON.stringify(contenidoJson, null, "\t")
+            );
+            console.log(`${productInfo.title} added successfully`);
+          }
         }
       }
     } catch (error) {
@@ -152,6 +169,14 @@ const manager = async () => {
         "https://res.cloudinary.com/dqrgdohtt/image/upload/v1687800303/cosmoDress_e6b1ry.jpg",
       code: "PROD2",
       stock: 2,
+    });
+    await productManager.addProduct({
+      title: "Body Rocket",
+      price: 10200,
+      thumbnail:
+        "https://res.cloudinary.com/dqrgdohtt/image/upload/v1687800304/bodyRocket_d7hikz.jpg",
+      code: "PROD3",
+      stock: 4,
     });
     //get products:
     await productManager.getProduct();
